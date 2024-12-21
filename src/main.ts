@@ -7,14 +7,20 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
 
+const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+if (darkMode) {
+  document.documentElement.classList.add('dark')
+}
+
 NProgress.configure({ 
-  showSpinner: false,  // 是否显示加载微调器
-  easing: 'ease',      // 动画方式
-  speed: 500,          // 递增进度条的速度
-  minimum: 0.3         // 最小百分比
+  showSpinner: false,
+  easing: 'ease',
+  speed: 500,
+  minimum: 0.3
 })
 
 const app = createApp(App)

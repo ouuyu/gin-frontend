@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', () => {
   const userInfo = ref(JSON.parse(localStorage.getItem('user') || '{}'))
 
   const isLogin = computed(() => !!token.value)
+  const isRoot = computed(() => userInfo.value.role === 100)
 
   const setToken = (newToken: string) => {
     token.value = newToken
@@ -28,6 +29,7 @@ export const useUserStore = defineStore('user', () => {
     token,
     userInfo,
     isLogin,
+    isRoot,
     setToken,
     setUserInfo,
     logout

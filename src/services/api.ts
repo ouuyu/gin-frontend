@@ -1,34 +1,13 @@
-import axios from 'axios';
+import { createAlova } from "alova";
+import adapterFetch from "alova/fetch";
 
-const API_URL = 'http://your-api'
-
-export const api = {
-  async login(username: string, password: string) {
-    const response = await axios.post(`${API_URL}/login`, {
-      username,
-      password
-    });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-    }
-    return response.data;
-  },
-
-  async register(username: string, password: string) {
-    const response = await axios.post(`${API_URL}/register`, {
-      username,
-      password
-    });
-    return response.data;
-  },
-
-  async getUserInfo() {
-    const token = localStorage.getItem('token')
-    const response = await axios.get(`${API_URL}/user`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    return response.data;
+const alovaInstance = createAlova({
+  baseURL: "http://localhost:3000/api",
+  requestAdapter: adapterFetch(),
+  responded: response => response.json(),
+  beforeRequest(method) {
+    method.config.headers.token = localStorage.getItem('token');
   }
-} 
+});
+
+export default alovaInstance;

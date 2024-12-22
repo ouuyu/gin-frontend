@@ -1,9 +1,12 @@
 <template>
   <header class="h-14 border-b flex items-center justify-between px-4 dark:bg-gray-800 dark:border-gray-700">
     <div class="flex items-center gap-4">
-      <h1 class="text-lg font-medium dark:text-white">管理系统</h1>
+      <h1 class="text-lg font-medium dark:text-white">{{ configStore.config.system_name || '管理系统' }}</h1>
+      <div class="flex items-center gap-1">
+        <el-button link @click="router.push('/dashboard')">主页</el-button>
+        <el-button v-if="userStore.isRoot" link @click="router.push('/manage')">管理</el-button>
+      </div>
     </div>
-    
     <div class="flex items-center gap-4">
       <el-dropdown v-if="userStore.isLogin">
         <span class="flex items-center gap-2 cursor-pointer op-60 hover:op-100 dark:text-white">
@@ -31,9 +34,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user'
+import { useConfigStore } from '../../stores/config'
 
 const router = useRouter()
 const userStore = useUserStore()
+const configStore = useConfigStore()
 const isDark = ref(document.documentElement.classList.contains('dark'))
 
 const toggleDark = () => {

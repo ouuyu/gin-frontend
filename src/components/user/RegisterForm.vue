@@ -39,7 +39,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { register } from '../services/user'
+import { register } from '../../services/user'
 
 const router = useRouter()
 const username = ref('')

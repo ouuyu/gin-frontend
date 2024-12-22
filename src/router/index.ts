@@ -22,6 +22,12 @@ const router = createRouter({
           path: 'register',
           name: 'register',
           component: () => import('../pages/Register.vue')
+        },
+        {
+          path: 'manage',
+          name: 'manage',
+          component: () => import('../pages/Manage.vue'),
+          meta: { requiresAdmin: true }
         }
       ]
     }

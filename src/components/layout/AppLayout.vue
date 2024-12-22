@@ -1,12 +1,14 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-    <AppHeader />
+    <AppHeader class="sticky top-0 z-10" />
     
-    <main class="flex-1">
-      <router-view />
+    <main class="flex-1 relative">
+      <div class="absolute inset-0 overflow-y-auto">
+        <router-view />
+      </div>
     </main>
     
-    <AppFooter />
+    <AppFooter class="sticky bottom-0 z-10" />
   </div>
 </template>
 

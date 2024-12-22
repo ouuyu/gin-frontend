@@ -19,9 +19,10 @@ if (darkMode) {
 
 NProgress.configure({ 
   showSpinner: false,
-  easing: 'ease',
-  speed: 500,
-  minimum: 0.3
+  easing: 'ease-out',
+  speed: 400,
+  minimum: 0.2,
+  trickleSpeed: 200
 })
 
 const app = createApp(App)

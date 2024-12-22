@@ -26,7 +26,9 @@ interface ApiResponse<T> {
 }
 
 export const getConfig = async () => {
-  const res = await alovaInstance.Get<ApiResponse<SystemConfig>>('/system/config')
+  const res = await alovaInstance.Get<ApiResponse<SystemConfig>>('/system/config', {
+    cacheFor: 0
+  })
   return res.data
 }
 

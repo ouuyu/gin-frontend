@@ -4,7 +4,15 @@
       <h1 class="text-lg font-medium dark:text-white">{{ configStore.config.system_name || '管理系统' }}</h1>
       <div class="flex items-center gap-1">
         <el-button link @click="router.push('/dashboard')">主页</el-button>
-        <el-button v-if="userStore.isRoot" link @click="router.push('/manage')">管理</el-button>
+        <el-dropdown v-if="userStore.isRoot">
+          <el-button link>管理</el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="router.push('/manage/config')">系统配置</el-dropdown-item>
+              <el-dropdown-item @click="router.push('/manage/users')">用户管理</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
     <div class="flex items-center gap-4">

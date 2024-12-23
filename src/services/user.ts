@@ -1,6 +1,7 @@
 import alovaInstance from './api';
+import type { BaseResponse } from './api';
 
-interface LoginResponse {
+interface LoginResponse extends BaseResponse {
   data: {
     id: number;
     username: string;
@@ -16,9 +17,11 @@ interface LoginResponse {
   success: boolean;
 }
 
-interface RegisterResponse {
-  message: string;
-  success: boolean;
+interface UserListResponse extends BaseResponse {
+  data: {
+    list: [];
+    total: number;
+  };
 }
 
 export const login = async (username: string, password: string) => {
@@ -35,14 +38,14 @@ export const login = async (username: string, password: string) => {
     }
     throw new Error(response.message || '登录失败');
   } catch (error: any) {
-    const message = error.message || '网络错误，请稍后重试';
+    const message = error.message;
     throw new Error(message);
   }
 };
 
 export const register = async (username: string, password: string) => {
   try {
-    const response = await alovaInstance.Post<RegisterResponse>('/user/register', {
+    const response = await alovaInstance.Post<BaseResponse>('/user/register', {
       username,
       password
     });
@@ -52,7 +55,22 @@ export const register = async (username: string, password: string) => {
     }
     throw new Error(response.message || '注册失败');
   } catch (error: any) {
-    const message = error.message || '网络错误，请稍后重试';
+    const message = error.message;
     throw new Error(message);
+  }
+};
+
+export const getUserList = async (page: number, pageSize: number) => {
+  try {
+    const response = await alovaInstance.Get<UserListResponse>('/system/users', {
+      params: {
+        page,
+        pageSize
+      },
+      cacheFor: 0
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };

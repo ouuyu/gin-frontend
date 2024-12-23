@@ -24,9 +24,15 @@ const router = createRouter({
           component: () => import('../pages/Register.vue')
         },
         {
-          path: 'manage',
-          name: 'manage',
-          component: () => import('../pages/Manage.vue'),
+          path: 'manage/config',
+          name: 'manageConfig',
+          component: () => import('../pages/manage/SystemConfig.vue'),
+          meta: { requiresAdmin: true }
+        },
+        {
+          path: 'manage/users',
+          name: 'manageUsers',
+          component: () => import('../pages/manage/UserList.vue'),
           meta: { requiresAdmin: true }
         }
       ]

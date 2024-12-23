@@ -4,6 +4,12 @@ import NProgress from 'nprogress';
 import { useUserStore } from '../stores/user';
 import { ElMessage } from 'element-plus';
 
+export interface BaseResponse {
+  message: string;
+  success: boolean;
+  data: any;
+}
+
 const alovaInstance = createAlova({
   baseURL: "http://localhost:3000/api",
   requestAdapter: adapterFetch(),

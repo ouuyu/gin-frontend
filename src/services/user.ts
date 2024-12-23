@@ -1,5 +1,6 @@
 import alovaInstance from './api';
 import type { BaseResponse } from './api';
+import { useUserStore } from '../stores/user';
 
 interface LoginResponse extends BaseResponse {
   data: {
@@ -70,6 +71,27 @@ export const getUserList = async (page: number, pageSize: number) => {
       cacheFor: 0
     });
     return response.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const resetUserPassword = async (id?: number, password?: string) => {
+  try {
+    id = id || useUserStore().userInfo.id
+    password = password || '123456'
+
+    const response = await alovaInstance.Get<BaseResponse>('/user/reset', {
+      params: {
+        id,
+        password
+      }
+    });
+
+    if (response.success) {
+      return response.message;
+    }
+    throw new Error(response.message || '重置密码失败');
   } catch (error: any) {
     throw new Error(error.message);
   }

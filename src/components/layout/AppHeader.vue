@@ -23,6 +23,7 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
+            <el-dropdown-item @click="handleResetPassword">重置密码</el-dropdown-item>
             <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -43,6 +44,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user'
 import { useConfigStore } from '../../stores/config'
+import { resetUserPassword } from '../../services/user'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -57,5 +60,33 @@ const toggleDark = () => {
 const handleLogout = () => {
   userStore.logout()
   router.push('/login')
+}
+
+const handleResetPassword = async () => {
+  try {
+    const { value: password } = await ElMessageBox.prompt('请输入新密码', '重置密码', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputType: 'password',
+      inputValidator: (value) => {
+        if (!value) {
+          return '密码不能为空'
+        }
+        if (value.length < 8) {
+          return '密码长度至少为8位'
+        }
+        return true
+      }
+    })
+    
+    if (password) {
+      await resetUserPassword(undefined, password)
+      ElMessage.success('密码重置成功')
+    }
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error(error.message || '密码重置失败')
+    }
+  }
 }
 </script>

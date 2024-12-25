@@ -63,7 +63,7 @@ export const register = async (username: string, password: string) => {
 
 export const getUserList = async (page: number, pageSize: number) => {
   try {
-    const response = await alovaInstance.Get<UserListResponse>('/system/users', {
+    const response = await alovaInstance.Get<UserListResponse>('/system/user/list', {
       params: {
         page,
         pageSize
@@ -71,6 +71,30 @@ export const getUserList = async (page: number, pageSize: number) => {
       cacheFor: 0
     });
     return response.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateUser = async (user: any) => {
+  try {
+    const response = await alovaInstance.Post<BaseResponse>('/system/user/update', user);
+    if (response.success) {
+      return response.message;
+    }
+    throw new Error(response.message || '更新用户失败');
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteUser = async (id: number) => {
+  try {
+    const response = await alovaInstance.Post<BaseResponse>('/system/user/delete', { id });
+    if (response.success) {
+      return response.message;
+    }
+    throw new Error(response.message || '删除用户失败');
   } catch (error: any) {
     throw new Error(error.message);
   }

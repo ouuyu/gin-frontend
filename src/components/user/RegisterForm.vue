@@ -57,8 +57,6 @@ const handleRegister = async () => {
     await register(username.value, password.value)
     ElMessage.success('注册成功，请登录')
     router.push('/login')
-  } catch (error: any) {
-    ElMessage.error(error.message || '注册失败，请重试')
   } finally {
     loading.value = false
   }

@@ -63,30 +63,24 @@ const handleLogout = () => {
 }
 
 const handleResetPassword = async () => {
-  try {
-    const { value: password } = await ElMessageBox.prompt('请输入新密码', '重置密码', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      inputType: 'password',
-      inputValidator: (value) => {
-        if (!value) {
-          return '密码不能为空'
-        }
-        if (value.length < 8) {
-          return '密码长度至少为8位'
-        }
-        return true
+  const { value: password } = await ElMessageBox.prompt('请输入新密码', '重置密码', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    inputType: 'password',
+    inputValidator: (value) => {
+      if (!value) {
+        return '密码不能为空'
       }
-    })
-    
-    if (password) {
-      await resetUserPassword(undefined, password)
-      ElMessage.success('密码重置成功')
+      if (value.length < 8) {
+        return '密码长度至少为8位'
+      }
+      return true
     }
-  } catch (error: any) {
-    if (error !== 'cancel') {
-      ElMessage.error(error.message || '密码重置失败')
-    }
+  })
+  
+  if (password) {
+    await resetUserPassword(undefined, password)
+    ElMessage.success('密码重置成功')
   }
 }
 </script>

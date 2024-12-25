@@ -21,8 +21,6 @@ const login = async () => {
     localStorage.setItem('token', data.token)
     ElMessage.success('登录成功')
     router.push('/')
-  } catch (e: any) {
-    ElMessage.error(e.response?.data?.message || '登录失败，请重试')
   } finally {
     loading.value = false
   }

@@ -79,8 +79,6 @@ const handleSubmit = async () => {
       username.value = ''
       password.value = ''
     }
-  } catch (error: any) {
-    ElMessage.error(error.message || `${isLogin.value ? '登录' : '注册'}失败，请重试`)
   } finally {
     loading.value = false
   }

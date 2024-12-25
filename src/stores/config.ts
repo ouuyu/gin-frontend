@@ -13,8 +13,6 @@ export const useConfigStore = defineStore('config', () => {
     try {
       const res = await getConfig()
       config.value = res
-    } catch (error) {
-      ElMessage.error('获取配置失败')
     } finally {
       loading.value = false
     }

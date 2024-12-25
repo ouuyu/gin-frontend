@@ -74,8 +74,6 @@ const handleChange = async (
   try {
     await saveConfig(key, config.value[key])
     ElMessage.success('保存成功')
-  } catch (error) {
-    ElMessage.error(`${key} 保存失败`)
   } finally {
     await fetchConfig()
     setTimeout(() => {
@@ -85,12 +83,8 @@ const handleChange = async (
 }
 
 const fetchConfig = async () => {
-  try {
-    const res = await getConfig()
-    config.value = res
-  } catch (error) {
-    ElMessage.error('获取配置失败')
-  }
+  const res = await getConfig()
+  config.value = res
 }
 
 onMounted(() => {

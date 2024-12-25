@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getConfig } from '../services/config'
 import type { SystemConfig } from '../services/config'
-import { ElMessage } from 'element-plus'
 
 export const useConfigStore = defineStore('config', () => {
   const config = ref<SystemConfig>({} as SystemConfig)

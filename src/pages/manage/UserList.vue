@@ -4,7 +4,7 @@
       <template #header>
         <div class="flex justify-between items-center">
           <span>用户管理</span>
-          <el-button type="primary" @click="handleAdd">添加用户</el-button>
+          <el-button text bg type="primary" @click="handleAdd">添加用户</el-button>
         </div>
       </template>
 
@@ -31,33 +31,12 @@
         </el-table-column>
       </el-table>
 
-      <el-dialog
-        v-model="showEdit"
-        :title="currentUser.id ? '编辑用户' : '添加用户'"
-        width="500px"
-      >
-        <el-form :model="currentUser" label-width="80px">
-          <el-form-item label="用户名">
-            <el-input v-model="currentUser.username" :disabled="!!currentUser.id" />
-          </el-form-item>
-          <el-form-item label="邮箱">
-            <el-input v-model="currentUser.email" />
-          </el-form-item>
-          <el-form-item label="角色">
-            <el-select v-model="currentUser.role">
-              <el-option label="管理员" :value="100" />
-              <el-option label="普通用户" :value="1" />
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="!currentUser.id" label="密码">
-            <el-input v-model="currentUser.password" type="password" show-password />
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <el-button @click="showEdit = false">取消</el-button>
-          <el-button type="primary" @click="handleSave" :loading="saving">保存</el-button>
-        </template>
-      </el-dialog>
+      <user-edit-drawer
+        v-model:visible="showEdit"
+        :user-id="currentUser.id"
+        :user-data="currentUser"
+        @success="handleEditSuccess"
+      />
     </el-card>
   </div>
 </template>
@@ -65,7 +44,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getUserList, deleteUser, updateUser } from '../../services/user';
+import { getUserList, deleteUser } from '@/services/user';
+import UserEditDrawer from '@/components/manage/UserEditDrawer.vue';
 
 interface User {
   id: number;
@@ -77,7 +57,6 @@ interface User {
 }
 
 const loading = ref(false);
-const saving = ref(false);
 const userList = ref<User[]>([]);
 const showEdit = ref(false);
 const currentUser = ref<User>({
@@ -118,16 +97,8 @@ const handleEdit = (row: User) => {
   showEdit.value = true;
 };
 
-const handleSave = async () => {
-  saving.value = true;
-  try {
-    await updateUser(currentUser.value);
-    ElMessage.success('保存成功');
-    showEdit.value = false;
-    loadUserList();
-  } finally {
-    saving.value = false;
-  }
+const handleEditSuccess = () => {
+  loadUserList();
 };
 
 const handleDelete = async (row: User) => {

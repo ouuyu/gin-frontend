@@ -59,8 +59,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getConfig, saveConfig } from '../../services/config'
-import type { SystemConfig } from '../../services/config'
+import { getConfig, saveConfig } from '@/services/config'
+import type { SystemConfig } from '@/services/config'
 import { ElMessage } from 'element-plus'
 
 const config = ref<SystemConfig>({} as SystemConfig)

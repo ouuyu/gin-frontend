@@ -42,9 +42,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../../stores/user'
-import { useConfigStore } from '../../stores/config'
-import { resetUserPassword } from '../../services/user'
+import { useUserStore } from '@/stores/user'
+import { useConfigStore } from '@/stores/config'
+import { resetUserPassword } from '@/services/user'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 const router = useRouter()

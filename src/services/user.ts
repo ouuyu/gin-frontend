@@ -1,18 +1,23 @@
 import alovaInstance from './api';
 import type { BaseResponse } from './api';
-import { useUserStore } from '../stores/user';
+import { useUserStore } from '@/stores/user';
+
+
+export interface User {
+  id: number;
+  username: string;
+  password?: string;
+  role: number;
+  status: number;
+  token?: string;
+  email?: string;
+  github_id?: string;
+}
 
 interface LoginResponse extends BaseResponse {
   data: {
-    id: number;
-    username: string;
-    password: string;
-    role: number;
-    status: number;
+    user: User;
     token: string;
-    email: string;
-    github_id: string;
-    verification_code: string;
   };
   message: string;
   success: boolean;
@@ -33,7 +38,7 @@ export const login = async (username: string, password: string) => {
     });
     
     if (response.success) {
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('token', response.data.token || '');
       localStorage.setItem('user', JSON.stringify(response.data));
       return response.data;
     }

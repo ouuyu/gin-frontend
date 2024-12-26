@@ -31,10 +31,29 @@
         </el-table-column>
       </el-table>
 
+      <div class="flex justify-end mt-4">
+        <el-pagination
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :total="total"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+
       <user-edit-drawer
         v-model:visible="showEdit"
         :user-id="currentUser.id"
-        :user-data="currentUser"
+        :user-data="{
+          id: currentUser.id,
+          username: currentUser.username,
+          email: currentUser.email || '',
+          role: currentUser.role,
+          status: currentUser.status,
+          password: currentUser.password
+        }"
         @success="handleEditSuccess"
       />
     </el-card>
@@ -45,16 +64,8 @@
 import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { getUserList, deleteUser } from '@/services/user';
+import type { User } from '@/services/user';
 import UserEditDrawer from '@/components/manage/UserEditDrawer.vue';
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: number;
-  status: number;
-  password?: string;
-}
 
 const loading = ref(false);
 const userList = ref<User[]>([]);
@@ -68,11 +79,16 @@ const currentUser = ref<User>({
   password: ''
 });
 
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
 const loadUserList = async () => {
   loading.value = true;
   try {
-    const res = await getUserList(1, 100);
+    const res = await getUserList(currentPage.value, pageSize.value);
     userList.value = res.list || [];
+    total.value = res.total || 0;
   } catch (error: any) {
     ElMessage.error(error.message);
   } finally {
@@ -114,6 +130,16 @@ const handleDelete = async (row: User) => {
       ElMessage.error(error.message);
     }
   }
+};
+
+const handleSizeChange = (val: number) => {
+  pageSize.value = val;
+  loadUserList();
+};
+
+const handleCurrentChange = (val: number) => {
+  currentPage.value = val;
+  loadUserList();
 };
 
 onMounted(loadUserList);

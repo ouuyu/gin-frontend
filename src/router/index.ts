@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../components/layout/AppLayout.vue'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -30,8 +31,8 @@ const router = createRouter({
           meta: { requiresAdmin: true }
         },
         {
-          path: 'manage/users',
-          name: 'manageUsers',
+          path: 'manage/user',
+          name: 'manageUser',
           component: () => import('../pages/manage/UserList.vue'),
           meta: { requiresAdmin: true }
         }
@@ -45,6 +46,8 @@ router.beforeEach((to, _, next) => {
   if (to.path !== '/login' && !token) {
     next('/login')
   } else if (to.path === '/login' && token) {
+    next('/dashboard')
+  } else if (to.meta.requiresAdmin && !useUserStore().isRoot) {
     next('/dashboard')
   } else {
     next()

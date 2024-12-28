@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <el-card>
+  <div class="p-8">
+    <el-card v-loading="loading">
       <template #header>
         <div class="flex justify-between items-center">
           <span>用户管理</span>
@@ -8,7 +8,8 @@
         </div>
       </template>
 
-      <el-table :data="userList" v-loading="loading">
+      <el-table :data="userList">
+        <el-table-column prop="id" label="ID" width="80"/>
         <el-table-column prop="username" label="用户名" />
         <el-table-column prop="email" label="邮箱" />
         <el-table-column prop="role" label="角色">

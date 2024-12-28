@@ -1,7 +1,7 @@
 <template>
-  <div class="p-8">
-    <el-collapse>
-      <el-form v-loading="saving">
+  <div class="p-8" v-loading="saving">
+    <el-collapse accordion>
+      <el-form>
         <el-collapse-item v-for="section in configs" :key="section.name" :title="section.name">
           <template v-for="item in section.items" :key="item.key">
             <el-form-item :label="item.label">

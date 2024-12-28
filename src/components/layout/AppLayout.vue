@@ -3,7 +3,7 @@
     <AppHeader class="sticky top-0 z-10" />
     
     <main class="flex-1 relative">
-      <div class="absolute inset-0 overflow-y-auto">
+      <div class="absolute inset-0 overflow-y-auto dark:bg-gray-900">
         <router-view />
       </div>
     </main>

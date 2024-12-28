@@ -1,6 +1,7 @@
 import alovaInstance from './api';
 import type { BaseResponse } from './api';
 import { useUserStore } from '@/stores/user';
+import type { Group } from './group';
 
 
 export interface User {
@@ -12,6 +13,8 @@ export interface User {
   token?: string;
   email?: string;
   github_id?: string;
+  group_id?: number;
+  group?: Group;
 }
 
 interface LoginResponse extends BaseResponse {
@@ -44,84 +47,58 @@ export const login = async (username: string, password: string) => {
     }
     throw new Error(response.message || '登录失败');
   } catch (error: any) {
-    const message = error.message;
-    throw new Error(message);
+    throw new Error(error.message);
   }
 };
 
 export const register = async (username: string, password: string) => {
-  try {
-    const response = await alovaInstance.Post<BaseResponse>('/user/register', {
-      username,
-      password
-    });
-    
-    if (response.success) {
-      return response.message;
-    }
-    throw new Error(response.message || '注册失败');
-  } catch (error: any) {
-    const message = error.message;
-    throw new Error(message);
-  }
+  const response = await alovaInstance.Post<BaseResponse>('/user/register', {
+    username,
+    password
+  });
+  return response.data
 };
 
 export const getUserList = async (page: number, pageSize: number) => {
-  try {
-    const response = await alovaInstance.Get<UserListResponse>('/system/user/list', {
-      params: {
-        page,
-        pageSize
-      },
-      cacheFor: 0
-    });
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
+  const response = await alovaInstance.Get<UserListResponse>('/system/user/list', {
+    params: {
+      page,
+      pageSize
+    },
+    cacheFor: 0
+  });
+  return response.data;
 };
 
 export const updateUser = async (user: any) => {
-  try {
-    const response = await alovaInstance.Post<BaseResponse>('/system/user/update', user);
-    if (response.success) {
-      return response.message;
-    }
-    throw new Error(response.message || '更新用户失败');
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
+  const response = await alovaInstance.Post<BaseResponse>('/system/user/update', user)
+  return response.data
 };
 
 export const deleteUser = async (id: number) => {
-  try {
-    const response = await alovaInstance.Post<BaseResponse>('/system/user/delete', { id });
-    if (response.success) {
-      return response.message;
-    }
-    throw new Error(response.message || '删除用户失败');
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
+  const response = await alovaInstance.Delete<BaseResponse>('/system/user/delete/' + id)
+  return response.data
 };
+
+export const createUser = async (user: any) => {
+  const response = await alovaInstance.Post<BaseResponse>('/system/user/create', user)
+  return response.data
+}
 
 export const resetUserPassword = async (id?: number, password?: string) => {
-  try {
-    id = id || useUserStore().userInfo.id
-    password = password || '123456'
+  id = id || useUserStore().userInfo.id
+  password = password || '123456'
 
-    const response = await alovaInstance.Get<BaseResponse>('/user/reset', {
-      params: {
-        id,
-        password
-      }
-    });
-
-    if (response.success) {
-      return response.message;
+  const response = await alovaInstance.Get<BaseResponse>('/user/reset', {
+    params: {
+      id,
+      password
     }
-    throw new Error(response.message || '重置密码失败');
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
+  });
+  return response.data
 };
+
+export const getUserInfo = async () => {
+  const response = await alovaInstance.Get<BaseResponse>('/user/info')
+  return response.data
+}

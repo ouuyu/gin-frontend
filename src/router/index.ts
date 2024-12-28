@@ -35,6 +35,12 @@ const router = createRouter({
           name: 'manageUser',
           component: () => import('../pages/manage/User.vue'),
           meta: { requiresAdmin: true }
+        },
+        {
+          path: 'manage/group',
+          name: 'manageGroup',
+          component: () => import('../pages/manage/Group.vue'),
+          meta: { requiresAdmin: true }
         }
       ]
     }

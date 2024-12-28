@@ -4,7 +4,7 @@
     :title="props.userId ? '编辑用户' : '添加用户'"
     :size="500"
   >
-    <el-form :model="formData" label-width="80px">
+    <el-form :model="formData" label-width="80px" v-loading="loading">
       <el-form-item label="用户名">
         <el-input v-model="formData.username" :disabled="!!props.userId" />
       </el-form-item>
@@ -16,6 +16,19 @@
           <el-option label="管理员" :value="100" />
           <el-option label="普通用户" :value="1" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="分组">
+        <el-select v-model="formData.group_id" filterable placeholder="请选择分组">
+          <el-option
+            v-for="group in groupList"
+            :key="group.id"
+            :label="group.name"
+            :value="group.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-switch v-model="formData.status" :active-value="1" :inactive-value="2" />
       </el-form-item>
       <el-form-item v-if="!props.userId" label="密码">
         <el-input v-model="formData.password" type="password" show-password />
@@ -31,18 +44,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { updateUser } from '@/services/user'
-
-interface User {
-  id: number
-  username: string
-  email: string
-  role: number
-  status: number
-  password?: string
-}
+import { updateUser, createUser, getUserInfo } from '@/services/user'
+import { getGroupList } from '@/services/group'
+import type { Group } from '@/services/group'
+import type { User } from '@/services/user'
 
 const props = defineProps<{
   visible: boolean
@@ -56,18 +63,35 @@ const emit = defineEmits<{
 }>()
 
 const saving = ref(false)
+const loading = ref(false)
 const visible = ref(props.visible)
-const formData = ref<User>({
+const groupList = ref<Group[]>([])
+
+const getEmptyFormData = (): User => ({
   id: 0,
   username: '',
   email: '',
   role: 1,
   status: 1,
-  password: ''
+  password: '',
+  group_id: 0
 })
 
-watch(() => props.visible, (val) => {
+const formData = ref<User>(getEmptyFormData())
+
+const loadGroupList = async () => {
+  const res = await getGroupList()
+  groupList.value = res
+}
+
+watch(() => props.visible, async (val) => {
   visible.value = val
+  if (val) {
+    loading.value = true
+    loadGroupList()
+    formData.value = await getUserInfo()
+    loading.value = false
+  }
 })
 
 watch(() => visible.value, (val) => {
@@ -78,25 +102,23 @@ watch(() => props.userData, (val) => {
   if (val) {
     formData.value = { ...val }
   } else {
-    formData.value = {
-      id: 0,
-      username: '',
-      email: '',
-      role: 1,
-      status: 1,
-      password: ''
-    }
+    formData.value = getEmptyFormData()
   }
 }, { immediate: true })
 
 const handleClose = () => {
   visible.value = false
+  formData.value = getEmptyFormData()
 }
 
 const handleSave = async () => {
   saving.value = true
   try {
-    await updateUser(formData.value)
+    if (props.userId) {
+      await updateUser(formData.value)
+    } else {
+      await createUser(formData.value)
+    }
     ElMessage.success('保存成功')
     visible.value = false
     emit('success')
@@ -104,4 +126,8 @@ const handleSave = async () => {
     saving.value = false
   }
 }
+
+onMounted(() => {
+  loadGroupList()
+})
 </script> 

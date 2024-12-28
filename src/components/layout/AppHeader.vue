@@ -50,11 +50,11 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="handleResetPassword">
-                <div class="i-fa-solid:key mr-2" />
+                <el-icon><Key /></el-icon>
                 重置密码
               </el-dropdown-item>
               <el-dropdown-item @click="handleLogout">
-                <div class="i-fa-solid:sign-out-alt mr-2" />
+                <el-icon><Remove /></el-icon>
                 退出登录
               </el-dropdown-item>
             </el-dropdown-menu>

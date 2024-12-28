@@ -1,60 +1,29 @@
 <template>
-  <el-form v-loading="saving" label-width="220px" class="max-w-3xl">
-    <el-form-item label="系统名称">
-      <el-input v-model="config.system_name" @change="() => handleChange('system_name')" />
-    </el-form-item>
-    <el-form-item label="系统版本">
-      <el-input v-model="config.version" disabled />
-    </el-form-item>
-    <el-form-item label="页脚信息">
-      <el-input v-model="config.footer" @change="() => handleChange('footer')" />
-    </el-form-item>
-    <el-form-item label="首页地址">
-      <el-input v-model="config.home_page" @change="() => handleChange('home_page')" />
-    </el-form-item>
-    <el-form-item label="数据库路径">
-      <el-input v-model="config.sqlite_path" disabled />
-    </el-form-item>
-
-    <el-divider>注册设置</el-divider>
-    <el-form-item label="开启注册">
-      <el-switch v-model="config.register_enabled" @change="() => handleChange('register_enabled')" />
-    </el-form-item>
-    <el-form-item label="允许密码注册">
-      <el-switch v-model="config.password_register_enabled" @change="() => handleChange('password_register_enabled')" />
-    </el-form-item>
-    <el-form-item label="开启邮箱验证">
-      <el-switch v-model="config.email_verification_enabled" @change="() => handleChange('email_verification_enabled')" />
-    </el-form-item>
-    <el-form-item label="开启人机验证">
-      <el-switch v-model="config.recaptcha_enabled" @change="() => handleChange('recaptcha_enabled')" />
-    </el-form-item>
-
-    <el-divider>邮件设置</el-divider>
-    <el-form-item label="SMTP 服务器">
-      <el-input v-model="config.smtp_server" @change="() => handleChange('smtp_server')" />
-    </el-form-item>
-    <el-form-item label="SMTP 端口">
-      <el-input type="number" v-model="config.smtp_port" @change="() => handleChange('smtp_port')" />
-    </el-form-item>
-    <el-form-item label="SMTP 用户名">
-      <el-input v-model="config.smtp_user" @change="() => handleChange('smtp_user')" />
-    </el-form-item>
-    <el-form-item label="SMTP 密码">
-      <el-input v-model="config.smtp_password" type="password" show-password @change="() => handleChange('smtp_password')" />
-    </el-form-item>
-    <el-form-item label="发件人地址">
-      <el-input v-model="config.smtp_from" @change="() => handleChange('smtp_from')" />
-    </el-form-item>
-
-    <el-divider>人机验证设置</el-divider>
-    <el-form-item label="Site Key">
-      <el-input v-model="config.recaptcha_site_key" @change="() => handleChange('recaptcha_site_key')" />
-    </el-form-item>
-    <el-form-item label="Secret Key">
-      <el-input v-model="config.recaptcha_secret_key" show-password @change="() => handleChange('recaptcha_secret_key')" />
-    </el-form-item>
-  </el-form>
+  <div class="p-8">
+    <el-collapse>
+      <el-form v-loading="saving">
+        <el-collapse-item v-for="section in configs" :key="section.name" :title="section.name">
+          <template v-for="item in section.items" :key="item.key">
+            <el-form-item :label="item.label">
+              <el-switch 
+                v-if="item.type === 'switch'"
+                v-model="config[item.key]"
+                @change="() => handleChange(item.key)"
+              />
+              <el-input
+                v-else
+                v-model="config[item.key]"
+                :type="item.type || 'text'"
+                :show-password="item.type === 'password'"
+                :disabled="item.disabled"
+                @change="() => handleChange(item.key)"
+              />
+            </el-form-item>
+          </template>
+        </el-collapse-item>
+      </el-form>
+    </el-collapse>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -62,6 +31,52 @@ import { ref, onMounted } from 'vue'
 import { getConfig, saveConfig } from '@/services/config'
 import type { SystemConfig } from '@/services/config'
 import { ElMessage } from 'element-plus'
+
+interface ConfigItem {
+  key: keyof SystemConfig;
+  label: string;
+  type?: string;
+  disabled?: boolean;
+}
+
+const configs: { name: string; items: ConfigItem[] }[] = [
+  {
+    name: "基础设置",
+    items: [
+      { key: 'system_name' as keyof SystemConfig, label: '系统名称', disabled: false },
+      { key: 'version' as keyof SystemConfig, label: '系统版本', disabled: true },
+      { key: 'footer' as keyof SystemConfig, label: '页脚信息', disabled: false },
+      { key: 'home_page' as keyof SystemConfig, label: '首页地址', disabled: false },
+      { key: 'sqlite_path' as keyof SystemConfig, label: '数据库路径', disabled: true }
+    ]
+  },
+  {
+    name: "注册设置",
+    items: [
+      { key: 'register_enabled' as keyof SystemConfig, label: '开启注册', type: 'switch' },
+      { key: 'password_register_enabled' as keyof SystemConfig, label: '允许密码注册', type: 'switch' },
+      { key: 'email_verification_enabled' as keyof SystemConfig, label: '开启邮箱验证', type: 'switch' },
+      { key: 'recaptcha_enabled' as keyof SystemConfig, label: '开启人机验证', type: 'switch' }
+    ]
+  },
+  {
+    name: "邮件设置",
+    items: [
+      { key: 'smtp_server' as keyof SystemConfig, label: 'SMTP 服务器' },
+      { key: 'smtp_port' as keyof SystemConfig, label: 'SMTP 端口', type: 'number' },
+      { key: 'smtp_user' as keyof SystemConfig, label: 'SMTP 用户名' },
+      { key: 'smtp_password' as keyof SystemConfig, label: 'SMTP 密码', type: 'password' },
+      { key: 'smtp_from' as keyof SystemConfig, label: '发件人地址' }
+    ]
+  },
+  {
+    name: "人机验证设置",
+    items: [
+      { key: 'recaptcha_site_key' as keyof SystemConfig, label: 'Site Key' },
+      { key: 'recaptcha_secret_key' as keyof SystemConfig, label: 'Secret Key', type: 'password' }
+    ]
+  }
+]
 
 const config = ref<SystemConfig>({} as SystemConfig)
 const saving = ref(false)

@@ -12,6 +12,7 @@
         <el-table-column prop="id" label="ID" width="80"/>
         <el-table-column prop="username" label="用户名" />
         <el-table-column prop="email" label="邮箱" />
+        <el-table-column prop="group.name" label="分组" />
         <el-table-column prop="role" label="角色">
           <template #default="{ row }">
             {{ row.role === 100 ? '管理员' : '普通用户' }}
@@ -24,7 +25,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作" fixed="right" width="150">
           <template #default="{ row }">
             <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" link @click="handleDelete(row)">删除</el-button>

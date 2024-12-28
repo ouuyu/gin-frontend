@@ -71,6 +71,7 @@ export const getUserList = async (page: number, pageSize: number) => {
 };
 
 export const updateUser = async (user: any) => {
+  delete user.group
   const response = await alovaInstance.Post<BaseResponse>('/system/user/update', user)
   return response.data
 };

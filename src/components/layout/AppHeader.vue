@@ -9,7 +9,7 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="router.push('/manage/config')">系统配置</el-dropdown-item>
-              <el-dropdown-item @click="router.push('/manage/users')">用户管理</el-dropdown-item>
+              <el-dropdown-item @click="router.push('/manage/user')">用户管理</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

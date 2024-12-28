@@ -38,6 +38,10 @@
               用户组管理
             </el-menu-item>
           </el-sub-menu>
+          <el-menu-item index="/store" @click="router.push('/store')">
+            <el-icon><Wallet /></el-icon>
+            商城
+          </el-menu-item>
         </el-menu>
       </div>
 

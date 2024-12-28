@@ -17,6 +17,9 @@ interface SystemConfig {
   smtp_from: string
   recaptcha_site_key: string
   recaptcha_secret_key: string
+  easy_pay_url: string
+  easy_pay_pid: string
+  easy_pay_key: string
 }
 
 interface ApiResponse<T> {
@@ -27,6 +30,13 @@ interface ApiResponse<T> {
 
 export const getConfig = async () => {
   const res = await alovaInstance.Get<ApiResponse<SystemConfig>>('/config', {
+    cacheFor: 0
+  })
+  return res.data
+}
+
+export const getSystemConfig = async () => {
+  const res = await alovaInstance.Get<ApiResponse<SystemConfig>>('/system/config', {
     cacheFor: 0
   })
   return res.data

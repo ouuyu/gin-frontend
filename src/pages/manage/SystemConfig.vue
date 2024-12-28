@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getConfig, saveConfig } from '@/services/config'
+import { getSystemConfig, saveConfig } from '@/services/config'
 import type { SystemConfig } from '@/services/config'
 import { ElMessage } from 'element-plus'
 
@@ -75,6 +75,14 @@ const configs: { name: string; items: ConfigItem[] }[] = [
       { key: 'recaptcha_site_key' as keyof SystemConfig, label: 'Site Key' },
       { key: 'recaptcha_secret_key' as keyof SystemConfig, label: 'Secret Key', type: 'password' }
     ]
+  },
+  {
+    name: "支付设置",
+    items: [
+      { key: 'easy_pay_url' as keyof SystemConfig, label: '易支付地址' },
+      { key: 'easy_pay_pid' as keyof SystemConfig, label: '易支付商户ID' },
+      { key: 'easy_pay_key' as keyof SystemConfig, label: '易支付密钥', type: 'password' }
+    ]
   }
 ]
 
@@ -98,7 +106,7 @@ const handleChange = async (
 }
 
 const fetchConfig = async () => {
-  const res = await getConfig()
+  const res = await getSystemConfig()
   config.value = res
 }
 

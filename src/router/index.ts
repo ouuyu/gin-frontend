@@ -41,6 +41,11 @@ const router = createRouter({
           name: 'manageGroup',
           component: () => import('../pages/manage/Group.vue'),
           meta: { requiresAdmin: true }
+        },
+        {
+          path: 'store',
+          name: 'store',
+          component: () => import('../pages/Store.vue')
         }
       ]
     }

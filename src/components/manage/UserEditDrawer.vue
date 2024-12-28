@@ -86,10 +86,10 @@ const loadGroupList = async () => {
 
 watch(() => props.visible, async (val) => {
   visible.value = val
-  if (val) {
+  if (val && props.userId) {
     loading.value = true
     loadGroupList()
-    formData.value = await getUserInfo()
+    formData.value = await getUserInfo(props.userId)
     loading.value = false
   }
 })

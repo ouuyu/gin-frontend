@@ -10,6 +10,7 @@
       <el-table :data="groupList">
         <el-table-column prop="id" label="ID" />
         <el-table-column prop="name" label="名称" />
+        <el-table-column prop="user_count" label="用户数量" />
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
             <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>

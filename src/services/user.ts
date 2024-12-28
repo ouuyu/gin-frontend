@@ -99,7 +99,19 @@ export const resetUserPassword = async (id?: number, password?: string) => {
   return response.data
 };
 
-export const getUserInfo = async () => {
+export const getSelfInfo = async () => {
   const response = await alovaInstance.Get<BaseResponse>('/user/info')
+  return response.data
+}
+
+export const getUserInfo = async (userid: number) => {
+  if (userid === 0) {
+    return undefined
+  }
+  const response = await alovaInstance.Get<BaseResponse>('/user/info', {
+    params: {
+      userid
+    }
+  })
   return response.data
 }
